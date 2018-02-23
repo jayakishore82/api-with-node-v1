@@ -35,19 +35,14 @@ app.get('/',(req,res,next) => {
       }
       twitter.tweets = [];
       let tweetdata = {};
-      let text = '';
       let time = '';
       let likes = 0;
-      let retweet = 0;
-      let imageurl = "";
 
       twitter.name = data[0].user.name;
       twitter.imageurl = data[0].user.profile_image_url;
 
       for(let i = 0; i<5; i++) {
-         text = data[i].text;
          time = moment.utc(data[i].created_at, 'dd MMM DD HH:mm:ss ZZ YYYY').fromNow();
-         retweet = data[i].retweet_count;
 
          if (data[i].retweeted_status) {
            likes = data[i].retweeted_status.favorite_count;
@@ -56,10 +51,9 @@ app.get('/',(req,res,next) => {
            likes = data[i].favorite_count;
          }
 
-         tweetdata = { text,time,likes,retweet } ;
+         tweetdata = { text: data[i].text, time: time, likes: likes, retweet: data[i].retweet_count } ;
          twitter.tweets.push(tweetdata);
-
-      }
+       }
         next();
     });
 
